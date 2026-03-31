@@ -149,6 +149,8 @@
     .ticker-track {
       display: inline-flex;
       animation: ticker 25s linear infinite;
+      will-change: transform;
+      backface-visibility: hidden;
     }
     .ticker-item {
       font-family: 'Alfa Slab One', serif;
@@ -384,6 +386,8 @@
     .clients-track {
       display: inline-flex; align-items: center;
       animation: clientTicker 30s linear infinite;
+      will-change: transform;
+      backface-visibility: hidden;
     }
     .client-name {
       font-family: 'Merriweather', serif;
