@@ -588,6 +588,94 @@
     .reveal-delay-1 { transition-delay: 0.1s; }
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.35s; }
+
+    /* ═══════════════════════════════════════════════════
+       MOBILE — max-width: 768px
+    ═══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+
+      /* NAV */
+      nav { padding: 1rem 1.25rem; }
+      .nav-logo img { height: 24px; }
+      .nav-links { gap: 1.25rem; }
+      .nav-links a { font-size: 0.6rem; letter-spacing: 0.1em; }
+
+      /* HERO */
+      .hero {
+        height: auto; min-height: 80vh;
+        padding: 1.25rem 1.25rem 1.5rem;
+      }
+      .hero-eyebrow {
+        font-size: 0.65rem; letter-spacing: 0.12em;
+        top: 4.5rem; left: 1.25rem;
+      }
+      .hero-counter { display: none; }
+      .hero-peek { display: none; }
+      .hero-title { font-size: clamp(3rem, 18vw, 7rem); line-height: 0.88; }
+      .hero-footer { flex-direction: column; align-items: flex-start; gap: 1.25rem; margin-top: 1.5rem; }
+      .hero-scroll { font-size: 0.55rem; }
+      .hero-scroll-line { width: 36px; }
+
+      /* TICKERS */
+      .ticker-item { font-size: 0.65rem; padding: 0 1rem; }
+      .ticker { padding: 0.65rem 0; }
+      .client-name { font-size: 0.65rem; padding: 0 1.25rem; }
+      .clients { padding: 0.75rem 0; }
+
+      /* WORK */
+      .work { padding: 3.5rem 1.25rem; }
+      .work-header { flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+      .work-title { font-size: clamp(2.5rem, 14vw, 6rem); }
+      .eyebrow { font-size: 0.72rem; }
+      .work-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .work-item.featured { grid-column: 1; }
+      .work-item.featured .thumb { aspect-ratio: 16/9; min-height: 0 !important; }
+      .work-item:not(.featured) .thumb { min-height: 0 !important; }
+      .work-name { font-size: clamp(1rem, 5vw, 1.5rem); }
+      .work-footer { margin-top: 2.5rem; }
+      .see-all-btn { font-size: 0.85rem; padding: 0.9rem 2rem; }
+
+      /* ABOUT */
+      .about { padding: 2.5rem 1.25rem; }
+      .about-pill { padding: 2.5rem 1.5rem; border-radius: 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-title { font-size: clamp(1.5rem, 10vw, 3.5rem); }
+      .about-stats { grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; padding-top: 2rem; }
+      .stat-num { font-size: 2.2rem; }
+      .stat-lbl { font-size: 0.58rem; }
+      .about-body p { font-size: 0.82rem; }
+
+      /* BOOKING */
+      .booking { padding: 3.5rem 1.25rem 3rem; }
+      .booking-header { grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+      .booking-title { font-size: clamp(2rem, 13vw, 5rem); white-space: normal; }
+      .booking-subtitle { font-size: 0.9rem; }
+      .booking-form { grid-template-columns: 1fr; gap: 1.75rem; }
+      .booking-form .full { grid-column: 1; }
+      .form-label { font-size: 0.75rem; }
+      .form-field { font-size: 0.95rem; padding: 0.85rem 0; }
+      textarea.form-field { font-size: 0.95rem; min-height: 140px; padding: 1rem; }
+      .form-submit { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+      .submit-btn { font-size: 0.95rem; padding: 1.1rem 2.5rem; width: 100%; text-align: center; }
+      .submit-note { font-size: 0.78rem; }
+
+      /* FOOTER */
+      .footer { flex-direction: column; gap: 0.6rem; padding: 1.5rem 1.25rem; text-align: center; }
+      .footer-copy, .footer-terms { font-size: 0.75rem; }
+    }
+
+    /* ═══════════════════════════════════════════════════
+       SMALL MOBILE — max-width: 480px
+    ═══════════════════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .nav-links { gap: 0.85rem; }
+      .nav-links a { font-size: 0.55rem; }
+      .hero-title { font-size: clamp(2.5rem, 20vw, 5rem); }
+      .work-title { font-size: clamp(2rem, 16vw, 4rem); }
+      .about-title { font-size: clamp(1.2rem, 11vw, 2.8rem); }
+      .booking-title { font-size: clamp(1.8rem, 15vw, 4rem); }
+      .about-pill { padding: 2rem 1.25rem; }
+    }
   </style>
 </head>
 <body>

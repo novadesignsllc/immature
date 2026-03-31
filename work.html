@@ -163,6 +163,64 @@
     .reveal-delay-3 { transition-delay: 0.3s; }
     .reveal-delay-4 { transition-delay: 0.4s; }
 
+    /* ═══════════════════════════════════════════════════
+       MOBILE — max-width: 768px
+    ═══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+
+      /* HEADER */
+      .page-header { padding: 2.5rem 1.25rem 2rem; }
+      .back-link { position: static; transform: none; margin-bottom: 1.25rem; font-size: 0.7rem; }
+      .logo-link img { height: 36px; }
+      .page-eyebrow { font-size: 0.72rem; margin-top: 0.85rem; }
+
+      /* WORK PAGE */
+      .work-page { padding: 3rem 1.25rem 6rem; }
+      .section-divider { font-size: 0.72rem; padding: 2rem 0 1.5rem; }
+      .work-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .work-item.featured { grid-column: 1; }
+      .work-item.featured .thumb { aspect-ratio: 16/9; min-height: 0 !important; }
+      .work-item:not(.featured) .thumb { min-height: 0 !important; }
+      .work-name { font-size: clamp(1rem, 5vw, 1.5rem); }
+      .work-client { font-size: 0.72rem; }
+      .work-tag { font-size: 0.65rem; }
+
+      /* ABOUT */
+      .about { padding: 2.5rem 1.25rem; }
+      .about-pill { padding: 2.5rem 1.5rem; border-radius: 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-title { font-size: clamp(1.5rem, 10vw, 3.5rem); white-space: normal; }
+      .about-stats { grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; padding-top: 2rem; }
+      .stat-num { font-size: 2.2rem; }
+      .stat-lbl { font-size: 0.58rem; }
+      .about-body p { font-size: 0.82rem; }
+      .eyebrow { font-size: 0.72rem; }
+
+      /* BOOKING */
+      .booking { padding: 3.5rem 1.25rem 3rem; }
+      .booking-header { grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+      .booking-title { font-size: clamp(2rem, 13vw, 5rem); white-space: normal; }
+      .booking-subtitle { font-size: 0.9rem; }
+      .booking-form { grid-template-columns: 1fr; gap: 1.75rem; }
+      .booking-form .full { grid-column: 1; }
+      .form-label { font-size: 0.75rem; }
+      .form-field { font-size: 0.95rem; padding: 0.85rem 0; }
+      textarea.form-field { font-size: 0.95rem; min-height: 140px; padding: 1rem; }
+      .form-submit { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+      .submit-btn { font-size: 0.95rem; padding: 1.1rem 2.5rem; width: 100%; text-align: center; }
+      .submit-note { font-size: 0.78rem; }
+
+      /* FOOTER */
+      .footer { flex-direction: column; gap: 0.6rem; padding: 1.5rem 1.25rem; text-align: center; }
+      .footer-copy, .footer-terms { font-size: 0.75rem; }
+    }
+
+    @media (max-width: 480px) {
+      .about-title { font-size: clamp(1.2rem, 11vw, 2.8rem); }
+      .booking-title { font-size: clamp(1.8rem, 15vw, 4rem); }
+      .about-pill { padding: 2rem 1.25rem; }
+    }
+
     /* ─── ABOUT — white outer, black pill ───────────── */
     .about {
       padding: 6rem 2.5rem;
