@@ -601,7 +601,7 @@
 
       /* HERO */
       .hero {
-        height: auto; min-height: 80vh;
+        height: 65vh; min-height: 0;
         padding: 1.25rem 1.25rem 1.5rem;
       }
       .hero-eyebrow {
@@ -610,7 +610,7 @@
       }
       .hero-counter { display: none; }
       .hero-peek { display: none; }
-      .hero-title { font-size: clamp(3rem, 18vw, 7rem); line-height: 0.88; }
+      .hero-title { font-size: clamp(2.5rem, 13vw, 6rem); line-height: 0.88; white-space: nowrap; }
       .hero-footer { flex-direction: column; align-items: flex-start; gap: 1.25rem; margin-top: 1.5rem; }
       .hero-scroll { font-size: 0.55rem; }
       .hero-scroll-line { width: 36px; }
@@ -624,7 +624,7 @@
       /* WORK */
       .work { padding: 3.5rem 1.25rem; }
       .work-header { flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
-      .work-title { font-size: clamp(2.5rem, 14vw, 6rem); }
+      .work-title { font-size: clamp(2rem, 11vw, 5rem); white-space: nowrap; }
       .eyebrow { font-size: 0.72rem; }
       .work-grid { grid-template-columns: 1fr; gap: 1rem; }
       .work-item.featured { grid-column: 1; }
@@ -667,12 +667,10 @@
        SMALL MOBILE — max-width: 480px
     ═══════════════════════════════════════════════════ */
     @media (max-width: 480px) {
-      .nav-links { gap: 0.85rem; }
-      .nav-links a { font-size: 0.55rem; }
-      .hero-title { font-size: clamp(2.5rem, 20vw, 5rem); }
-      .work-title { font-size: clamp(2rem, 16vw, 4rem); }
-      .about-title { font-size: clamp(1.2rem, 11vw, 2.8rem); }
-      .booking-title { font-size: clamp(1.8rem, 15vw, 4rem); }
+      .hero-title { font-size: clamp(2rem, 12vw, 4rem); }
+      .work-title { font-size: clamp(1.8rem, 10vw, 3.5rem); }
+      .about-title { font-size: clamp(1.2rem, 10vw, 2.8rem); }
+      .booking-title { font-size: clamp(1.8rem, 12vw, 4rem); }
       .about-pill { padding: 2rem 1.25rem; }
     }
   </style>
