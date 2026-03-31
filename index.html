@@ -32,32 +32,7 @@
       color: var(--white);
       font-family: 'Merriweather', Georgia, serif;
       overflow-x: clip;
-      cursor: none;
     }
-
-    /* ─── CUSTOM CURSOR ──────────────────────────────── */
-    .cursor {
-      position: fixed;
-      width: 10px; height: 10px;
-      background: var(--c-400);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transition: transform 0.15s ease, background 0.3s ease;
-      transform: translate(-50%, -50%);
-    }
-    .cursor-ring {
-      position: fixed;
-      width: 38px; height: 38px;
-      border: 1px solid rgba(233,116,81,0.5);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transition: transform 0.4s ease, width 0.4s ease, height 0.4s ease, border-color 0.3s ease;
-      transform: translate(-50%, -50%);
-    }
-    .cursor.hovering { transform: translate(-50%, -50%) scale(2.5); background: var(--c-700); }
-    .cursor-ring.hovering { width: 60px; height: 60px; border-color: var(--c-400); }
 
     /* ─── NAV ────────────────────────────────────────── */
     nav {
@@ -217,7 +192,7 @@
     .work-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 
     .work-item {
-      position: relative; overflow: hidden; cursor: none;
+      position: relative; overflow: hidden;
       background: var(--mid);
     }
     .work-item.featured { grid-column: 1 / -1; }
@@ -368,7 +343,7 @@
       border-bottom: 1px solid rgba(243,237,232,0.08);
       padding: 2rem 0;
       display: flex; align-items: center; justify-content: space-between;
-      transition: padding-left 0.4s ease; cursor: none;
+      transition: padding-left 0.4s ease;
     }
     .svc-item:hover { padding-left: 1.5rem; }
     .svc-item:hover .svc-num { color: var(--c-400); }
@@ -489,7 +464,7 @@
       font-size: 1.1rem; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--white); background: #990000;
       border: 2px solid #990000;
-      padding: 1.4rem 4rem; cursor: none;
+      padding: 1.4rem 4rem;
       transition: background 0.3s, border-color 0.3s;
     }
     .submit-btn:hover { background: #080808; border-color: #080808; }
@@ -526,7 +501,6 @@
       z-index: 10; width: 52vw;
       display: flex; flex-direction: column;
       transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      cursor: none;
     }
     .hero-peek:hover { transform: translateX(2%); }
     .peek-card {
@@ -619,10 +593,6 @@
 <body>
 
   <div id="top"></div>
-
-  <!-- CURSOR -->
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
 
   <!-- NAV -->
   <nav>
@@ -904,38 +874,6 @@
   </footer>
 
   <script>
-    /* ── Custom cursor ───────────────────────── */
-    const cursor     = document.getElementById('cursor');
-    const cursorRing = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      cursor.style.left     = mx + 'px';
-      cursor.style.top      = my + 'px';
-    });
-
-    // Smooth ring follow
-    (function animRing() {
-      rx += (mx - rx) * 0.12;
-      ry += (my - ry) * 0.12;
-      cursorRing.style.left = rx + 'px';
-      cursorRing.style.top  = ry + 'px';
-      requestAnimationFrame(animRing);
-    })();
-
-    const hoverable = document.querySelectorAll('a, button, .work-item, .svc-item, .client-cell');
-    hoverable.forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        cursor.classList.add('hovering');
-        cursorRing.classList.add('hovering');
-      });
-      el.addEventListener('mouseleave', () => {
-        cursor.classList.remove('hovering');
-        cursorRing.classList.remove('hovering');
-      });
-    });
-
     /* ── Scroll reveal ───────────────────────── */
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver(entries => {
