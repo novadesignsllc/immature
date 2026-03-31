@@ -66,6 +66,32 @@
     }
     .nav-links a:hover { color: var(--c-400); }
 
+    /* ─── HERO ENTRANCE ANIMATIONS ──────────────────── */
+    @keyframes heroFadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes heroFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes heroTitleReveal {
+      from { opacity: 0; transform: translateY(48px) scaleY(1.04); letter-spacing: 0.06em; }
+      to   { opacity: 1; transform: translateY(0) scaleY(1); letter-spacing: -0.02em; }
+    }
+    @keyframes heroGlowPulse {
+      from { opacity: 0; }
+      to   { opacity: 0.65; }
+    }
+    @keyframes heroLineGrow {
+      from { width: 0; opacity: 0; }
+      to   { width: 60px; opacity: 1; }
+    }
+    @keyframes heroPeekSlide {
+      from { opacity: 0; transform: translateX(-110%); }
+      to   { opacity: 1; transform: translateX(-89%); }
+    }
+
     /* ─── HERO ───────────────────────────────────────── */
     .hero {
       height: 82vh; min-height: 560px;
@@ -88,7 +114,8 @@
         radial-gradient(ellipse 90% 45% at 35% 105%, #C94631 0%, transparent 55%),
         radial-gradient(ellipse 60% 35% at 10% 100%, #B92E20 0%, transparent 60%),
         radial-gradient(ellipse 55% 30% at 65% 100%, #990000 0%, transparent 55%);
-      opacity: 0.65; z-index: 0;
+      opacity: 0; z-index: 0;
+      animation: heroGlowPulse 2s ease 0.6s forwards;
     }
 
     /* Hero: lightest shade #E97451 for eyebrow — pops against black */
@@ -96,13 +123,16 @@
       position: absolute; top: 6.5rem; left: 2.5rem; z-index: 2;
       font-size: 0.85rem; font-weight: 300; letter-spacing: 0.22em;
       text-transform: uppercase; color: #E97451;
+      opacity: 0;
+      animation: heroFadeUp 0.8s ease 0.3s forwards;
     }
 
     .hero-counter {
       position: absolute; top: 6.5rem; right: 2.5rem; z-index: 2;
       font-size: 0.62rem; font-weight: 300; letter-spacing: 0.1em;
-      color: #D95D41; opacity: 0.6;
+      color: #D95D41; opacity: 0;
       font-style: italic;
+      animation: heroFadeIn 0.8s ease 0.5s forwards;
     }
 
     .hero-title {
@@ -112,6 +142,8 @@
       text-transform: uppercase; color: var(--white);
       position: relative; z-index: 2;
       user-select: none;
+      opacity: 0;
+      animation: heroTitleReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
     }
     /* Outlined letters in mid-orange #D95D41 stroke */
     .hero-title .stroke {
@@ -122,6 +154,8 @@
     .hero-footer {
       display: flex; justify-content: space-between; align-items: flex-end;
       margin-top: 2.5rem; position: relative; z-index: 2;
+      opacity: 0;
+      animation: heroFadeUp 0.7s ease 1s forwards;
     }
 
     .hero-desc { max-width: 300px; }
@@ -135,9 +169,12 @@
       display: flex; align-items: center; gap: 1rem;
       font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
       color: #D95D41;
+      opacity: 0;
+      animation: heroFadeUp 0.7s ease 1.2s forwards;
     }
     .hero-scroll-line {
-      display: block; width: 60px; height: 1px; background: #D95D41;
+      display: block; width: 0; height: 1px; background: #D95D41;
+      animation: heroLineGrow 0.9s ease 1.4s forwards;
     }
 
     /* ─── TICKER — black bg, #B92E20 borders (swapped) ── */
@@ -505,6 +542,7 @@
       z-index: 10; width: 52vw;
       display: flex; flex-direction: column;
       transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      animation: heroPeekSlide 1s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both;
     }
     .hero-peek:hover { transform: translateX(2%); }
     .peek-card {
@@ -617,7 +655,7 @@
       .hero-title { font-size: clamp(2.5rem, 13vw, 6rem); line-height: 0.88; white-space: nowrap; }
       .hero-footer { flex-direction: column; align-items: flex-start; gap: 1.25rem; margin-top: 1.5rem; }
       .hero-scroll { font-size: 0.55rem; }
-      .hero-scroll-line { width: 36px; }
+      .hero-scroll-line { max-width: 36px; }
 
       /* TICKERS */
       .ticker-item { font-size: 0.65rem; padding: 0 1rem; }
