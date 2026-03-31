@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMMATURE — Music Video Director</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── RESET ─────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --c-900: #990000;
+      --c-800: #A91710;
+      --c-700: #B92E20;
+      --c-600: #C94631;
+      --c-500: #D95D41;
+      --c-400: #E97451;
+      --black:  #080808;
+      --white:  #F3EDE8;
+      --cream:  #EDE8E3;
+      --mid:    #1A1010;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Merriweather', Georgia, serif;
+      overflow-x: clip;
+      cursor: none;
+    }
+
+    /* ─── CUSTOM CURSOR ──────────────────────────────── */
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--c-400);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease, background 0.3s ease;
+      transform: translate(-50%, -50%);
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 38px; height: 38px;
+      border: 1px solid rgba(233,116,81,0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.4s ease, width 0.4s ease, height 0.4s ease, border-color 0.3s ease;
+      transform: translate(-50%, -50%);
+    }
+    .cursor.hovering { transform: translate(-50%, -50%) scale(2.5); background: var(--c-700); }
+    .cursor-ring.hovering { width: 60px; height: 60px; border-color: var(--c-400); }
+
+    /* ─── NAV ────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.5rem 2.5rem;
+      transition: background 0.4s ease, backdrop-filter 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(8, 8, 8, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding-top: 1rem; padding-bottom: 1rem;
+      box-shadow: 0 1px 0 rgba(185,46,32,0.3);
+    }
+    .nav-logo {
+      display: block; text-decoration: none;
+    }
+    .nav-logo img {
+      height: 32px; width: auto;
+      filter: brightness(0) invert(1);
+      transition: opacity 0.3s;
+    }
+    .nav-logo img:hover { opacity: 0.7; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.65rem; font-weight: 300; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--white); text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--c-400); }
+
+    /* ─── HERO ───────────────────────────────────────── */
+    .hero {
+      height: 82vh; min-height: 560px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 2.5rem;
+      position: relative; overflow: visible;
+      background: var(--black);
+    }
+
+    .hero-grain {
+      position: absolute; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      opacity: 0.35; pointer-events: none;
+    }
+
+    .hero-glow {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 90% 45% at 35% 105%, #C94631 0%, transparent 55%),
+        radial-gradient(ellipse 60% 35% at 10% 100%, #B92E20 0%, transparent 60%),
+        radial-gradient(ellipse 55% 30% at 65% 100%, #990000 0%, transparent 55%);
+      opacity: 0.65; z-index: 0;
+    }
+
+    /* Hero: lightest shade #E97451 for eyebrow — pops against black */
+    .hero-eyebrow {
+      position: absolute; top: 6.5rem; left: 2.5rem; z-index: 2;
+      font-size: 0.85rem; font-weight: 300; letter-spacing: 0.22em;
+      text-transform: uppercase; color: #E97451;
+    }
+
+    .hero-counter {
+      position: absolute; top: 6.5rem; right: 2.5rem; z-index: 2;
+      font-size: 0.62rem; font-weight: 300; letter-spacing: 0.1em;
+      color: #D95D41; opacity: 0.6;
+      font-style: italic;
+    }
+
+    .hero-title {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(4rem, 12vw, 14rem);
+      line-height: 0.82; letter-spacing: -0.02em;
+      text-transform: uppercase; color: var(--white);
+      position: relative; z-index: 2;
+      user-select: none;
+    }
+    /* Outlined letters in mid-orange #D95D41 stroke */
+    .hero-title .stroke {
+      -webkit-text-stroke: 2px #D95D41;
+      color: transparent;
+    }
+
+    .hero-footer {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-top: 2.5rem; position: relative; z-index: 2;
+    }
+
+    .hero-desc { max-width: 300px; }
+    .hero-desc p {
+      font-size: 0.8rem; font-weight: 300; line-height: 1.9;
+      color: var(--white); opacity: 0.6;
+    }
+
+    /* Scroll hint: #D95D41 */
+    .hero-scroll {
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: #D95D41;
+    }
+    .hero-scroll-line {
+      display: block; width: 60px; height: 1px; background: #D95D41;
+    }
+
+    /* ─── TICKER — black bg, #B92E20 borders (swapped) ── */
+    .ticker {
+      background: var(--black); overflow: hidden;
+      white-space: nowrap; padding: 0.95rem 0;
+      border-top: 1px solid #B92E20; border-bottom: 1px solid #B92E20;
+    }
+    .ticker-track {
+      display: inline-flex;
+      animation: ticker 25s linear infinite;
+    }
+    .ticker-item {
+      font-family: 'Alfa Slab One', serif;
+      font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0 1.75rem; color: var(--white);
+    }
+    .ticker-sep { color: #E97451; padding: 0 0.25rem; }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── SHARED eyebrow — #E97451 on dark, #B92E20 on light ── */
+    .eyebrow {
+      font-size: 0.85rem; font-weight: 300; letter-spacing: 0.22em;
+      text-transform: uppercase; color: #E97451; margin-bottom: 1rem;
+    }
+    .eyebrow.dark { color: #B92E20; }
+
+    /* ─── WORK ───────────────────────────────────────── */
+    .work { padding: 7rem 2.5rem; background: var(--black); }
+
+    .work-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 4rem;
+    }
+    .work-title {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(3.5rem, 9vw, 11rem);
+      line-height: 0.85; text-transform: uppercase; color: var(--white);
+    }
+    /* Work title accent: #C94631 */
+    .work-title .accent { color: #C94631; }
+    .work-side { max-width: 280px; align-self: flex-end; }
+    .work-side p {
+      font-size: 0.78rem; font-weight: 300; line-height: 1.9;
+      color: rgba(243,237,232,0.5);
+    }
+
+    /* Grid */
+    .work-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+    .work-item {
+      position: relative; overflow: hidden; cursor: none;
+      background: var(--mid);
+    }
+    .work-item.featured { grid-column: 1 / -1; }
+    .work-item.featured .thumb { aspect-ratio: 16/6.5; }
+    .work-item:not(.featured) .thumb { aspect-ratio: 16/9; }
+
+    .thumb {
+      width: 100%; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #0f0303 0%, #200a0a 60%, #0f0303 100%);
+      transition: background 0.5s ease;
+      position: relative;
+    }
+
+    /* Subtle grid texture inside thumb */
+    /* Grid texture uses #C94631 */
+    .thumb::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,70,49,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,70,49,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* Play button: #D95D41 ring */
+    .play-btn {
+      width: 64px; height: 64px; border-radius: 50%;
+      border: 1.5px solid rgba(217,93,65,0.4);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.35s ease; position: relative; z-index: 1;
+    }
+    .play-btn svg { fill: rgba(217,93,65,0.55); margin-left: 4px; transition: fill 0.3s; }
+
+    .work-item:not(.featured) .play-btn { width: 50px; height: 50px; }
+    .work-item:not(.featured) .play-btn svg { width: 18px; height: 18px; }
+
+    .work-item:hover .thumb {
+      background: linear-gradient(135deg, #1a0505 0%, #350e0e 60%, #1a0505 100%);
+    }
+    /* Hover: brightest #E97451 */
+    .work-item:hover .play-btn { border-color: #E97451; transform: scale(1.1); }
+    .work-item:hover .play-btn svg { fill: #E97451; }
+
+    .work-info {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,8,8,0.92) 0%, transparent 45%);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 1.75rem; transition: background 0.4s;
+    }
+    /* Hover overlay: darkest #990000 */
+    .work-item:hover .work-info {
+      background: linear-gradient(to top, rgba(153,0,0,0.7) 0%, transparent 55%);
+    }
+
+    /* Work client label: #E97451 (lightest, most readable on dark) */
+    .work-client {
+      font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: #E97451; margin-bottom: 0.4rem;
+    }
+    .work-name {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(1.1rem, 2.5vw, 2.2rem);
+      line-height: 1.05; text-transform: uppercase; color: var(--white);
+    }
+    .work-tag {
+      font-size: 0.62rem; font-weight: 300; font-style: italic;
+      color: rgba(243,237,232,0.5); margin-top: 0.4rem;
+    }
+
+    /* ─── BAND ───────────────────────────────────────── */
+    .band {
+      background: var(--c-800); padding: 6rem 2.5rem;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .band-bg-text {
+      position: absolute; inset: 0;
+      font-family: 'Alfa Slab One', serif;
+      font-size: 32vw; line-height: 1;
+      color: rgba(153,0,0,0.28); letter-spacing: -0.04em;
+      user-select: none; pointer-events: none;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .band-content { position: relative; z-index: 1; text-align: center; }
+    .band-title {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(3.5rem, 11vw, 13rem);
+      line-height: 0.82; text-transform: uppercase; color: var(--white);
+    }
+    .band-title .stroke {
+      display: block;
+      -webkit-text-stroke: 2px rgba(243,237,232,0.6);
+      color: transparent;
+    }
+
+    /* ─── ABOUT — white outer, black pill inner ─────── */
+    .about {
+      padding: 6rem 2.5rem;
+      background: var(--cream); color: var(--white);
+    }
+    .about-pill {
+      background: var(--black);
+      border-radius: 2.5rem;
+      padding: 5rem 4rem;
+    }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+    }
+    .about-title {
+      font-family: 'Alfa Slab One', serif;
+      line-height: 1; text-transform: uppercase; color: var(--white);
+    }
+    .about-title .red { color: #C94631; }
+    .about-stats {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2rem; margin-top: 3rem;
+      border-top: 1px solid rgba(201,70,49,0.3); padding-top: 2.5rem;
+    }
+    .stat-num {
+      font-family: 'Alfa Slab One', serif;
+      font-size: 3rem; color: #E97451; line-height: 1;
+    }
+    .stat-lbl {
+      font-size: 0.6rem; font-weight: 300; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--white); margin-top: 0.4rem;
+    }
+    .about-body p {
+      font-size: 0.88rem; font-weight: 300; line-height: 2.05;
+      color: var(--white); margin-bottom: 1.5rem;
+    }
+    .about-body p:last-child { margin-bottom: 0; }
+
+    /* ─── SERVICES ───────────────────────────────────── */
+    .services { padding: 7rem 2.5rem; background: var(--black); }
+    .services-hd {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(3rem, 9vw, 11rem);
+      line-height: 0.85; text-transform: uppercase; color: var(--white);
+      margin-bottom: 4rem;
+    }
+    .services-hd .stroke {
+      -webkit-text-stroke: 2px var(--c-600); color: transparent;
+    }
+    .svc-list { list-style: none; border-top: 1px solid rgba(243,237,232,0.08); }
+    .svc-item {
+      border-bottom: 1px solid rgba(243,237,232,0.08);
+      padding: 2rem 0;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: padding-left 0.4s ease; cursor: none;
+    }
+    .svc-item:hover { padding-left: 1.5rem; }
+    .svc-item:hover .svc-num { color: var(--c-400); }
+    .svc-left { display: flex; align-items: center; gap: 2.5rem; }
+    .svc-num {
+      font-size: 0.62rem; letter-spacing: 0.15em;
+      color: rgba(243,237,232,0.25); transition: color 0.3s; min-width: 2rem;
+    }
+    .svc-name {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(1.6rem, 3.5vw, 3.2rem);
+      text-transform: uppercase; color: var(--white);
+    }
+    .svc-arrow {
+      font-size: 1.4rem; color: var(--c-500);
+      opacity: 0; transform: translateX(-12px); transition: all 0.35s;
+    }
+    .svc-item:hover .svc-arrow { opacity: 1; transform: translateX(0); }
+
+    /* ─── SEE ALL BUTTON ─────────────────────────────── */
+    .work-footer { margin-top: 3.5rem; display: flex; justify-content: center; }
+    .see-all-btn {
+      font-family: 'Alfa Slab One', serif;
+      font-size: 1rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--white); text-decoration: none;
+      border: 2px solid #C94631;
+      padding: 1.1rem 3rem;
+      transition: background 0.3s, color 0.3s;
+      display: inline-block;
+    }
+    .see-all-btn:hover { background: #C94631; color: var(--white); }
+
+    /* ─── CLIENTS TICKER — #A91710 bg (swapped) ─────── */
+    .clients {
+      background: #A91710;
+      overflow: hidden; white-space: nowrap; padding: 1.1rem 0;
+    }
+    .clients-track {
+      display: inline-flex; align-items: center;
+      animation: clientTicker 30s linear infinite;
+    }
+    .client-name {
+      font-family: 'Merriweather', serif;
+      font-size: 0.85rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--white);
+      padding: 0 2.5rem; transition: opacity 0.3s;
+    }
+    .client-dot { color: #E97451; padding: 0 0.25rem; }
+    .clients-track:hover { animation-play-state: paused; }
+    .client-name:hover { opacity: 0.7; }
+    @keyframes clientTicker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── BOOKING FORM — INVERTED: white bg, dark text, full red palette ── */
+    .booking {
+      background: var(--cream); color: var(--black);
+      padding: 8rem 2.5rem 6rem;
+    }
+    .booking-header {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: flex-end; margin-bottom: 4rem;
+    }
+    .booking-title {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(3rem, 8vw, 9rem);
+      line-height: 0.85; text-transform: uppercase; color: var(--black);
+    }
+    /* "CALL" in #990000 — darkest, strong on cream */
+    .booking-title .red { color: #990000; }
+    .booking-subtitle {
+      font-size: 1.05rem; font-weight: 300; line-height: 1.9;
+      color: var(--black); align-self: flex-end;
+    }
+
+    /* Form grid */
+    .booking-form { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem 4rem; }
+    .booking-form .full { grid-column: 1 / -1; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.75rem; }
+    .form-label {
+      font-size: 0.85rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: #A91710;
+    }
+    .form-field {
+      background: transparent;
+      border: none; border-bottom: 2px solid rgba(8,8,8,0.2);
+      padding: 1rem 0;
+      color: var(--black); font-family: 'Merriweather', serif;
+      font-size: 1.05rem; font-weight: 300; outline: none;
+      transition: border-color 0.3s; width: 100%;
+      -webkit-appearance: none; appearance: none;
+    }
+    .form-field::placeholder { color: var(--black); font-style: italic; }
+    .form-field:focus { border-color: #B92E20; }
+
+    select.form-field {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B92E20' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 0 center;
+      padding-right: 1.5rem; cursor: pointer;
+    }
+    select.form-field option { background: var(--cream); color: var(--black); }
+
+    textarea.form-field {
+      resize: none; border: 2px solid rgba(8,8,8,0.2);
+      padding: 1.25rem; min-height: 180px; line-height: 1.9;
+      border-radius: 0; font-size: 1.05rem;
+    }
+    textarea.form-field:focus { border-color: #B92E20; }
+
+    .form-submit {
+      grid-column: 1 / -1; margin-top: 1.5rem;
+      display: flex; align-items: center; gap: 2.5rem;
+    }
+    .submit-btn {
+      font-family: 'Alfa Slab One', serif;
+      font-size: 1.1rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--white); background: #990000;
+      border: 2px solid #990000;
+      padding: 1.4rem 4rem; cursor: none;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .submit-btn:hover { background: #080808; border-color: #080808; }
+    .submit-note {
+      font-size: 0.85rem; font-weight: 300; font-style: italic;
+      color: var(--black); line-height: 1.7;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    .footer {
+      background: var(--black);
+      padding: 2rem 2.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid #B92E20;
+    }
+    .footer-copy {
+      font-size: 0.85rem; font-weight: 300;
+      color: var(--white); letter-spacing: 0.06em;
+    }
+    .footer-terms {
+      font-size: 0.85rem; font-weight: 300; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--white);
+      text-decoration: none; transition: opacity 0.3s;
+    }
+    .footer-terms:hover { opacity: 0.6; }
+
+    /* ─── HERO PEEK CARD ─────────────────────────────── */
+    .hero-peek {
+      position: absolute;
+      left: 0;
+      top: 10rem;      /* gap below hero-eyebrow text */
+      bottom: 17rem;   /* gap above IMMATURE title */
+      transform: translateX(-89%);
+      z-index: 10; width: 52vw;
+      display: flex; flex-direction: column;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      cursor: none;
+    }
+    .hero-peek:hover { transform: translateX(2%); }
+    .peek-card {
+      background: var(--black);
+      border: 1.5px solid #B92E20;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      height: 100%;
+    }
+    /* Thumbnail fills all remaining vertical space */
+    .peek-thumb {
+      width: 100%; flex: 1;
+      background: linear-gradient(135deg, #150404 0%, #2a0808 60%, #150404 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; min-height: 0;
+    }
+    .peek-thumb::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,70,49,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,70,49,0.06) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .peek-play {
+      width: 72px; height: 72px; border-radius: 50%;
+      border: 1.5px solid #D95D41;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 1;
+    }
+    .peek-play svg { fill: #D95D41; margin-left: 4px; }
+    .peek-info {
+      padding: 1.4rem 1.6rem;
+      border-top: 1px solid #B92E20;
+      flex-shrink: 0;
+    }
+    .peek-client {
+      display: block; font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: #E97451; margin-bottom: 0.4rem;
+    }
+    .peek-title {
+      display: block; font-family: 'Alfa Slab One', serif;
+      font-size: 1.2rem; text-transform: uppercase; color: var(--white);
+      line-height: 1.2;
+    }
+    .peek-tag {
+      display: block; font-size: 0.75rem; font-weight: 300;
+      font-style: italic; color: var(--white); margin-top: 0.35rem;
+    }
+    /* Tab/handle visible while peeking */
+    .peek-tab {
+      position: absolute; right: -34px; top: 50%;
+      transform: translateY(-50%);
+      background: #B92E20; color: var(--white);
+      writing-mode: vertical-rl; text-orientation: mixed;
+      font-family: 'Alfa Slab One', serif;
+      font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 1.25rem 0.55rem;
+      opacity: 1; transition: opacity 0.3s;
+    }
+    .hero-peek:hover .peek-tab { opacity: 0; }
+
+    /* ─── ALL HEADINGS ONE LINE ──────────────────────── */
+    .hero-title, .work-title, .about-title, .booking-title, .services-hd {
+      white-space: nowrap;
+    }
+    .hero-title    { font-size: clamp(2.5rem, 9vw, 12rem); }
+    .work-title    { font-size: clamp(2rem, 7vw, 9rem); }
+    .about-title   { font-size: clamp(1.5rem, 4.5vw, 5.5rem); }
+    .booking-title { font-size: clamp(2rem, 7vw, 9rem); }
+
+    /* ─── NO GRAYS — everything black or white ───────── */
+    .work-side p, .work-tag, .about-body p, .stat-lbl,
+    .hero-desc p, .booking-subtitle, .submit-note { color: var(--white); }
+    .booking-subtitle, .submit-note { color: var(--black); }
+    .hero-counter { opacity: 1; }
+
+    /* ─── SCROLL REVEAL ──────────────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.35s; }
+  </style>
+</head>
+<body>
+
+  <div id="top"></div>
+
+  <!-- CURSOR -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo"><img src="signature.png" alt="Immature"></a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ─── HERO ──────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-grain"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-eyebrow">Music Video Director — Connecticut</div>
+    <div class="hero-counter">2019 — Present</div>
+
+    <!-- Peek card — slides in from left on hover -->
+    <div class="hero-peek">
+      <div class="peek-tab">Latest</div>
+      <div class="peek-card">
+        <div class="peek-thumb">
+          <div class="peek-play">
+            <svg width="14" height="14" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+        <div class="peek-info">
+          <span class="peek-client">Artist Name</span>
+          <span class="peek-title">Song Title</span>
+          <span class="peek-tag">Official Music Video, 2025</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-title">
+      IMMA<span class="stroke">TURE</span>
+    </div>
+
+    <div class="hero-footer">
+      <div class="hero-desc"></div>
+      <div class="hero-scroll">
+        <span class="hero-scroll-line"></span>
+        Scroll to explore
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TICKER ────────────────────────────────────── -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-item">Music Video Direction</span><span class="ticker-item ticker-sep">✦</span>
+      <span class="ticker-item">Visual Storytelling</span><span class="ticker-item ticker-sep">✦</span>
+      <span class="ticker-item">Creative Direction</span><span class="ticker-item ticker-sep">✦</span>
+      <span class="ticker-item">Concept Development</span><span class="ticker-item ticker-sep">✦</span>
+      <span class="ticker-item">Post Production</span><span class="ticker-item ticker-sep">✦</span>
+      <span class="ticker-item">Visual Albums</span><span class="ticker-item ticker-sep">✦</span>
+      <span class="ticker-item">Music Video Direction</span><span class="ticker-item ticker-sep">✦</span>
+      <span class="ticker-item">Visual Storytelling</span><span class="ticker-item ticker-sep">✦</span>
+      <span class="ticker-item">Creative Direction</span><span class="ticker-item ticker-sep">✦</span>
+      <span class="ticker-item">Concept Development</span><span class="ticker-item ticker-sep">✦</span>
+      <span class="ticker-item">Post Production</span><span class="ticker-item ticker-sep">✦</span>
+      <span class="ticker-item">Visual Albums</span><span class="ticker-item ticker-sep">✦</span>
+    </div>
+  </div>
+
+  <!-- ─── CLIENTS (auto-scroll ticker) ─────────────── -->
+  <section class="clients" aria-label="Artists we've worked with">
+    <div class="clients-track">
+      <span class="client-name">Artist One</span><span class="client-dot">✦</span>
+      <span class="client-name">Artist Two</span><span class="client-dot">✦</span>
+      <span class="client-name">Artist Three</span><span class="client-dot">✦</span>
+      <span class="client-name">Artist Four</span><span class="client-dot">✦</span>
+      <span class="client-name">Label Co.</span><span class="client-dot">✦</span>
+      <span class="client-name">Artist Five</span><span class="client-dot">✦</span>
+      <span class="client-name">Artist Six</span><span class="client-dot">✦</span>
+      <span class="client-name">Label Two</span><span class="client-dot">✦</span>
+      <!-- duplicate for seamless loop -->
+      <span class="client-name">Artist One</span><span class="client-dot">✦</span>
+      <span class="client-name">Artist Two</span><span class="client-dot">✦</span>
+      <span class="client-name">Artist Three</span><span class="client-dot">✦</span>
+      <span class="client-name">Artist Four</span><span class="client-dot">✦</span>
+      <span class="client-name">Label Co.</span><span class="client-dot">✦</span>
+      <span class="client-name">Artist Five</span><span class="client-dot">✦</span>
+      <span class="client-name">Artist Six</span><span class="client-dot">✦</span>
+      <span class="client-name">Label Two</span><span class="client-dot">✦</span>
+    </div>
+  </section>
+
+  <!-- ─── WORK ──────────────────────────────────────── -->
+  <section class="work" id="work">
+    <div class="work-header reveal">
+      <div>
+        <div class="eyebrow">Recent Projects</div>
+        <div class="work-title">MY WORK<span class="accent">.</span></div>
+      </div>
+      <div class="work-side"></div>
+    </div>
+
+    <div class="work-grid">
+      <!-- Featured -->
+      <div class="work-item featured reveal">
+        <div class="thumb" style="min-height: 420px;">
+          <div class="play-btn">
+            <svg width="26" height="26" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+        <div class="work-info">
+          <div class="work-client">Artist Name</div>
+          <div class="work-name">Song Title — Director's Cut</div>
+          <div class="work-tag">Official Music Video, 2025 — 4K</div>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="work-item reveal reveal-delay-1">
+        <div class="thumb" style="min-height: 280px; background: linear-gradient(135deg, #100404 0%, #1e0808 60%, #100404 100%);">
+          <div class="play-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+        <div class="work-info">
+          <div class="work-client">Artist Name</div>
+          <div class="work-name">Track Title</div>
+          <div class="work-tag">Official Music Video, 2025</div>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="work-item reveal reveal-delay-2">
+        <div class="thumb" style="min-height: 280px; background: linear-gradient(135deg, #0a0606 0%, #180d0d 60%, #0a0606 100%);">
+          <div class="play-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+        <div class="work-info">
+          <div class="work-client">Artist Name</div>
+          <div class="work-name">Track Title</div>
+          <div class="work-tag">Visual Album, 2024</div>
+        </div>
+      </div>
+
+      <!-- Item 4 — full width -->
+      <div class="work-item featured reveal reveal-delay-3">
+        <div class="thumb" style="min-height: 320px; background: linear-gradient(135deg, #0d0305 0%, #1c0707 55%, #0d0305 100%);">
+          <div class="play-btn">
+            <svg width="26" height="26" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+        <div class="work-info">
+          <div class="work-client">Artist Name</div>
+          <div class="work-name">Album Title — Full Visual Film</div>
+          <div class="work-tag">Visual Album, 2024 — Short Film</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="work-footer reveal">
+      <a href="work.html" class="see-all-btn">See All My Work →</a>
+    </div>
+  </section>
+
+
+  <!-- ─── ABOUT ─────────────────────────────────────── -->
+  <section class="about" id="about">
+    <div class="about-pill reveal">
+      <div class="about-grid">
+        <div>
+          <div class="eyebrow">About</div>
+          <div class="about-title">THE DIR<span class="red">EC</span>TOR.</div>
+          <div class="about-stats">
+            <div>
+              <div class="stat-num">50+</div>
+              <div class="stat-lbl">Videos Directed</div>
+            </div>
+            <div>
+              <div class="stat-num">6+</div>
+              <div class="stat-lbl">Years Active</div>
+            </div>
+            <div>
+              <div class="stat-num">80+</div>
+              <div class="stat-lbl">Total Collaborations</div>
+            </div>
+            <div>
+              <div class="stat-num">1M+</div>
+              <div class="stat-lbl">Views</div>
+            </div>
+          </div>
+        </div>
+        <div class="about-body">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BOOKING FORM ──────────────────────────────── -->
+  <section class="booking" id="contact">
+    <div class="booking-header reveal">
+      <div class="booking-title">BOOK A <span class="red">CALL</span></div>
+      <p class="booking-subtitle">
+        Tell us about your project and we'll reach out within 48 hours to discuss if we're the right fit.
+      </p>
+    </div>
+
+    <form class="booking-form reveal reveal-delay-1" action="#" method="POST">
+
+      <!-- Name -->
+      <div class="form-group">
+        <label class="form-label" for="f-name">Full Name</label>
+        <input class="form-field" type="text" id="f-name" name="name" placeholder="Your name" required>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label" for="f-email">Email Address</label>
+        <input class="form-field" type="email" id="f-email" name="email" placeholder="your@email.com" required>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <label class="form-label" for="f-phone">Phone Number</label>
+        <input class="form-field" type="tel" id="f-phone" name="phone" placeholder="+1 (000) 000-0000">
+      </div>
+
+      <!-- Instagram -->
+      <div class="form-group">
+        <label class="form-label" for="f-insta">Instagram Handle</label>
+        <input class="form-field" type="text" id="f-insta" name="instagram" placeholder="@yourhandle">
+      </div>
+
+      <!-- Number of Projects -->
+      <div class="form-group">
+        <label class="form-label" for="f-num">Number of Projects</label>
+        <select class="form-field" id="f-num" name="num_projects" required>
+          <option value="" disabled selected>How many projects?</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>More than 5</option>
+        </select>
+      </div>
+
+      <!-- Budget -->
+      <div class="form-group">
+        <label class="form-label" for="f-budget">Budget Per Project</label>
+        <select class="form-field" id="f-budget" name="budget" required>
+          <option value="" disabled selected>Select a budget range</option>
+          <option>Under $1,500</option>
+          <option>$2,000</option>
+          <option>$2,500</option>
+          <option>$3,000</option>
+          <option>Greater than $5,000</option>
+        </select>
+      </div>
+
+      <!-- Message -->
+      <div class="form-group full">
+        <label class="form-label" for="f-message">Project Details</label>
+        <textarea class="form-field" id="f-message" name="message" placeholder="Tell us about your vision — artist, concept, timeline, location, references, anything that helps us understand your project…"></textarea>
+      </div>
+
+      <!-- Submit -->
+      <div class="form-submit">
+        <button type="submit" class="submit-btn">Send Inquiry →</button>
+        <p class="submit-note">We respond within 48 hours.<br>No spam, ever.</p>
+      </div>
+
+    </form>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────────── -->
+  <footer class="footer">
+    <span class="footer-copy">© Immature 2025. All rights reserved.</span>
+    <a href="#" class="footer-terms">Terms &amp; Privacy</a>
+  </footer>
+
+  <script>
+    /* ── Custom cursor ───────────────────────── */
+    const cursor     = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left     = mx + 'px';
+      cursor.style.top      = my + 'px';
+    });
+
+    // Smooth ring follow
+    (function animRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      cursorRing.style.left = rx + 'px';
+      cursorRing.style.top  = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
+
+    const hoverable = document.querySelectorAll('a, button, .work-item, .svc-item, .client-cell');
+    hoverable.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.classList.add('hovering');
+        cursorRing.classList.add('hovering');
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.classList.remove('hovering');
+        cursorRing.classList.remove('hovering');
+      });
+    });
+
+    /* ── Scroll reveal ───────────────────────── */
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => observer.observe(el));
+
+    /* ── Nav scroll background ───────────────── */
+    const navEl = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      navEl.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    /* ── Parallax hero glow ──────────────────── */
+    const glow = document.querySelector('.hero-glow');
+    window.addEventListener('mousemove', e => {
+      const x = (e.clientX / window.innerWidth) * 20 - 10;
+      const y = (e.clientY / window.innerHeight) * 20 - 10;
+      glow.style.transform = `translate(${x}px, ${y}px)`;
+    });
+  </script>
+
+</body>
+</html>
