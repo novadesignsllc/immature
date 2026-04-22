@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>immature</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red-0: #990000;
+      --red-1: #A91710;
+      --red-2: #B92E20;
+      --red-3: #C94631;
+      --red-4: #D95D41;
+      --red-5: #E97451;
+      --black: #000000;
+      --off-black: #0a0a0a;
+      --white: #f0ede8;
+      --font-display: 'Alfa Slab One', serif;
+      --font-body: 'Merriweather', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: transparent;
+      border-bottom: none;
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .logo-sig {
+      height: 44px;
+      width: auto;
+      filter: invert(1) brightness(1.2);
+      opacity: 0.92;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 64px 32px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      border-bottom: 1px solid #111;
+    }
+
+    .hero-label {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--red-4);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 8rem);
+      line-height: 0.9;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+
+    .hero-title span {
+      -webkit-text-stroke: 1px var(--red-3);
+      color: transparent;
+    }
+
+    .hero-sub {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--red-5);
+      letter-spacing: 0.05em;
+      margin-top: 8px;
+    }
+
+    /* ─── FILTER BAR ─── */
+    .filter-bar {
+      padding: 16px 32px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      border-bottom: 1px solid #111;
+    }
+
+    .filter-btn {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      background: none;
+      border: 1px solid #2a2a2a;
+      color: #888;
+      padding: 6px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      border-color: var(--red-3);
+      color: var(--red-4);
+      background: rgba(185, 46, 32, 0.08);
+    }
+
+    /* ─── GRID ─── */
+    .grid-section {
+      padding: 24px 24px 48px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-auto-rows: 180px;
+      gap: 6px;
+    }
+
+    .grid-item {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      background: #111;
+    }
+
+    .grid-item:nth-child(3n+1) { grid-row: span 2; }
+    .grid-item:nth-child(7n+3) { grid-column: span 2; }
+    .grid-item:nth-child(11n+5) { grid-row: span 2; grid-column: span 2; }
+
+    .grid-item img,
+    .grid-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease, filter 0.3s ease;
+      filter: brightness(0.85) saturate(0.9);
+    }
+
+    .grid-item:hover img,
+    .grid-item:hover video {
+      transform: scale(1.04);
+      filter: brightness(1) saturate(1.1);
+    }
+
+    .grid-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 14px;
+    }
+
+    .grid-item:hover .grid-item-overlay { opacity: 1; }
+
+    .grid-item-title {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .grid-item-meta {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      font-weight: 300;
+      color: var(--red-5);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .grid-item-type {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-family: var(--font-body);
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid var(--red-3);
+      color: var(--red-4);
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    /* placeholder tiles with gradient colors */
+    .ph { width: 100%; height: 100%; }
+    .ph-1  { background: linear-gradient(135deg, #1a0a0a 0%, #3d1a10 50%, #0d0505 100%); }
+    .ph-2  { background: linear-gradient(135deg, #0d0d0d 0%, #2a0f00 60%, #1a1a1a 100%); }
+    .ph-3  { background: linear-gradient(135deg, #200808 0%, #5c1a10 40%, #0a0a0a 100%); }
+    .ph-4  { background: linear-gradient(135deg, #0a0505 0%, #3b1008 60%, #1f0a0a 100%); }
+    .ph-5  { background: linear-gradient(135deg, #150505 0%, #440d0d 50%, #0f0505 100%); }
+    .ph-6  { background: linear-gradient(135deg, #0f0800 0%, #4a2010 50%, #1a0a05 100%); }
+    .ph-7  { background: linear-gradient(135deg, #1a0505 0%, #660000 40%, #0d0000 100%); }
+    .ph-8  { background: linear-gradient(135deg, #050505 0%, #2d1408 60%, #141414 100%); }
+    .ph-9  { background: linear-gradient(135deg, #1f0808 0%, #591e10 50%, #0d0505 100%); }
+    .ph-10 { background: linear-gradient(135deg, #0a0a0a 0%, #3d1a08 55%, #1a1205 100%); }
+    .ph-11 { background: linear-gradient(135deg, #150a00 0%, #522008 50%, #0d0800 100%); }
+    .ph-12 { background: linear-gradient(135deg, #0f0505 0%, #47140a 45%, #0a0505 100%); }
+    .ph-13 { background: linear-gradient(135deg, #1a0000 0%, #5c1414 50%, #0f0000 100%); }
+    .ph-14 { background: linear-gradient(135deg, #050a00 0%, #2e1205 55%, #141414 100%); }
+    .ph-15 { background: linear-gradient(135deg, #0a0505 0%, #3d1414 50%, #1a0a0a 100%); }
+
+    /* scan line effect on placeholders */
+    .ph::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+    }
+
+    /* ─── MODAL ─── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.96);
+      z-index: 200;
+      overflow-y: auto;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .modal-backdrop.open {
+      display: block;
+    }
+
+    .modal-backdrop.visible {
+      opacity: 1;
+    }
+
+    .modal-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    .modal-close {
+      position: fixed;
+      top: 20px;
+      right: 28px;
+      background: none;
+      border: 1px solid #333;
+      color: var(--white);
+      font-size: 1.2rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+      z-index: 201;
+    }
+
+    .modal-close:hover { border-color: var(--red-3); color: var(--red-4); }
+
+    .modal-project-type {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--red-4);
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1;
+      margin-bottom: 28px;
+      color: var(--white);
+    }
+
+    .modal-main-media {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #111;
+      margin-bottom: 28px;
+    }
+
+    .modal-main-media img,
+    .modal-main-media video,
+    .modal-main-media iframe {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: none;
+      display: block;
+    }
+
+    .modal-credits {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 32px;
+      margin-bottom: 32px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .credit-row {
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+    }
+
+    .credit-label {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .credit-value {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--red-5);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .credit-value:hover { border-bottom-color: var(--red-4); }
+
+    .modal-description {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      line-height: 1.9;
+      font-weight: 300;
+      color: rgba(240,237,232,0.7);
+      margin-bottom: 36px;
+    }
+
+    .modal-strip-label {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 12px;
+    }
+
+    .modal-strip {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--red-1) transparent;
+    }
+
+    .modal-strip::-webkit-scrollbar { height: 3px; }
+    .modal-strip::-webkit-scrollbar-track { background: transparent; }
+    .modal-strip::-webkit-scrollbar-thumb { background: var(--red-2); border-radius: 99px; }
+
+    .strip-thumb {
+      flex: 0 0 200px;
+      height: 112px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .strip-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .strip-thumb .ph { height: 100%; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #050505;
+      border-top: 1px solid var(--red-1);
+    }
+
+    .footer-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 52px 32px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      text-align: center;
+    }
+
+    .footer-wordmark {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      color: var(--white);
+      letter-spacing: -0.01em;
+      opacity: 0.15;
+    }
+
+    .footer-tagline {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-style: italic;
+      font-weight: 300;
+      color: #555;
+      letter-spacing: 0.08em;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .footer-socials a {
+      color: #555;
+      transition: color 0.2s;
+      display: flex;
+    }
+
+    .footer-socials a:hover { color: var(--red-4); }
+
+    .footer-socials svg { width: 22px; height: 22px; }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #444;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--red-4); }
+
+    .footer-copy {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      color: #333;
+      letter-spacing: 0.1em;
+    }
+
+    .footer-copy span { color: var(--red-3); }
+
+    /* ─── TICKER ─── */
+    .ticker-wrap {
+      width: 100%;
+      overflow: hidden;
+      background: var(--black);
+      padding: 10px 0;
+      border-top: 2px solid var(--red-2);
+    }
+
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      animation: ticker 90s linear infinite;
+    }
+
+    .ticker-track:hover { animation-play-state: paused; }
+
+    .ticker-item {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      padding: 0 14px;
+      white-space: nowrap;
+    }
+
+    .ticker-item.red { color: var(--red-3); }
+    .ticker-item.white { color: var(--white); }
+
+    @keyframes ticker {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ─── RED ACCENT LINE ─── */
+    .accent-stripe {
+      height: 3px;
+      background: linear-gradient(to right, var(--red-0), var(--red-1), var(--red-2), var(--red-3), var(--red-4), var(--red-5));
+    }
+
+    /* ─── SCROLL FADE-IN ─── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 140px; }
+      header { padding: 14px 16px; }
+      .hero { padding: 40px 16px 28px; }
+      .grid-section { padding: 16px 12px 40px; }
+      .modal-inner { padding: 48px 16px 60px; }
+      .modal-credits { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a class="logo-wrap" href="#" onclick="closeModal()">
+      <img class="logo-sig" src="signature.png" alt="immature" />
+    </a>
+  </header>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="music-video">Music Videos</button>
+    <button class="filter-btn" data-filter="short-film">Short Films</button>
+    <button class="filter-btn" data-filter="bts">Behind the Scenes</button>
+    <button class="filter-btn" data-filter="experimental">Experimental</button>
+    <button class="filter-btn" data-filter="narrative">Narrative</button>
+  </div>
+
+  <!-- GRID -->
+  <section class="grid-section">
+    <div class="grid" id="main-grid">
+    </div>
+  </section>
+
+  <!-- PROJECT MODAL -->
+  <div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close project">&times;</button>
+    <div class="modal-inner">
+      <p class="modal-project-type" id="modal-type"></p>
+      <h2 class="modal-title" id="modal-title"></h2>
+
+      <div class="modal-main-media" id="modal-media"></div>
+
+      <div class="modal-credits" id="modal-credits"></div>
+
+      <p class="modal-description" id="modal-desc"></p>
+
+      <div class="modal-strip" id="modal-strip"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-wordmark">immature</span>
+      <p class="footer-tagline">the eyes behind your lens</p>
+      <div class="footer-socials">
+        <!-- Instagram -->
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4.5"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <!-- YouTube -->
+        <a href="#" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+            <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+      </div>
+      <div class="footer-links">
+        <a href="#">Work</a>
+        <a href="#">Contact</a>
+      </div>
+      <p class="footer-copy">immature &nbsp;&mdash;&nbsp; <span>all rights reserved &nbsp;&copy; 2024</span></p>
+    </div>
+
+    <div class="ticker-wrap">
+      <div class="ticker-track" id="ticker">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ─── PROJECT DATA ───────────────────────────────────────────────
+    const projects = [
+      { id:"S1QG9JRnciE", title:"TB — Me & Slime",                      date:"Mar 20, 2026",  filter:"music-video", type:"Music Video",       desc:"A Video by iknowimmature Featuring T.B." },
+      { id:"o_kX7tuTc2I", title:"brndo — Avatar",                        date:"Dec 16, 2025",  filter:"music-video", type:"Music Video",       desc:"Song by brndo. Video by iknowimmature." },
+      { id:"Kb_ct997jLM", title:"Trel OTL — As I Am (Directors Cut)",    date:"Dec 5, 2025",   filter:"narrative",   type:"Narrative",         desc:"Official Directors Cut." },
+      { id:"hSLuAyfYGSk", title:"Jace Skies — Dear Diary",               date:"Sep 9, 2025",   filter:"music-video", type:"Music Video",       desc:"New music video for Dear Diary by Jace Skies." },
+      { id:"_uRKQf7ls_8", title:"Yung Tenk — Details",                   date:"Sep 5, 2025",   filter:"music-video", type:"Music Video",       desc:"Official Music Video for Details by Yung Tenk. Directed by iknowimmature." },
+      { id:"ROnycVc9iN4", title:"What's in the Bag? Sony Fx3",           date:"Sep 4, 2025",   filter:"bts",         type:"Behind the Scenes", desc:"Gear breakdown directed by iknowimmature." },
+      { id:"UMus9aD3Gb8", title:"iclypzx! — Cold World",                 date:"Sep 3, 2025",   filter:"music-video", type:"Music Video",       desc:"Official Video for COLD WORLD. Directed by Immature Visions." },
+      { id:"S_1GblYAmMU", title:"Yung Tenk — #2muchswag",                date:"Aug 8, 2025",   filter:"music-video", type:"Music Video",       desc:"Official Music Video for #2muchswag. Directed by iknowimmature." },
+      { id:"D1a_nMI9DaU", title:"night — ISFME",                         date:"Jul 4, 2025",   filter:"music-video", type:"Music Video",       desc:"Directed by iknowimmature." },
+      { id:"fR8f3cTspc0", title:"T.B — Nightmare",                       date:"Mar 28, 2025",  filter:"music-video", type:"Music Video",       desc:"The Official Music Video for Nightmare." },
+      { id:"Spuxhoc4hZY", title:"Lunarowdy — Let It Go",                 date:"Feb 14, 2025",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for LET IT GO by Lunarowdy." },
+      { id:"ev9ggY2bDKE", title:"Sxint — Lost It",                       date:"Jan 22, 2025",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for Lost It by Sxint." },
+      { id:"Kj1dl73bcgo", title:"YungTenk — Blue Shells",                date:"Jul 13, 2024",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for Blue Shells. Directed by iknowimmature." },
+      { id:"aD1dI1HQn0c", title:"Incompared — Episode 1",                date:"Jan 19, 2024",  filter:"narrative",   type:"Narrative",         desc:"Official First Episode of Ryan's Documentary." },
+      { id:"aH6W9nvn8sI", title:"Sxint — All Day",                       date:"Dec 30, 2023",  filter:"music-video", type:"Music Video",       desc:"Official Video for All Day by Sxint." },
+      { id:"pQNUa8vo63Y", title:"Jace Skies — Up",                       date:"Dec 15, 2023",  filter:"music-video", type:"Music Video",       desc:"Official music video." },
+      { id:"YITP6FC_nHg", title:"oupium — You're Not Special",           date:"Jul 14, 2023",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for You're Not Special by oupium." },
+      { id:"iWbhwA2PYaw", title:"Lil Buggg — Weight!",                   date:"Jul 1, 2023",   filter:"music-video", type:"Music Video",       desc:"Official Music Video for Weight! by Lil Buggg." },
+      { id:"QwBnNIlK-tw", title:"ideals are beautiful among martyrs",    date:"Jun 30, 2023",  filter:"experimental",type:"Experimental",      desc:"Official Music Video." },
+      { id:"HmBzF70M2UY", title:"Capital E — Can't Live Twice",          date:"Jun 23, 2023",  filter:"music-video", type:"Music Video",       desc:"Official music video of Can't Live Twice." },
+      { id:"e5MHhJ0qKx8", title:"DarkNight — Go (BTS)",                  date:"Jun 19, 2023",  filter:"bts",         type:"Behind the Scenes", desc:"Behind the Scenes of Go by DarkNight. Directed by iknowimmature." },
+      { id:"XpIlXAejJRQ", title:"night — Go",                            date:"Jun 16, 2023",  filter:"music-video", type:"Music Video",       desc:"DarkNight Go — Official Debut Music Video." },
+      { id:"8aBtG5Ce9bQ", title:"Jace Skies — Blasted",                  date:"Mar 24, 2023",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for Blasted by Jace Skies." },
+      { id:"CSEiFwz7I8E", title:"Vluddie — 2DaMoon",                     date:"Mar 10, 2023",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for 2DaMoon by Vluddie." },
+      { id:"UPVQvqpSc7U", title:"Slerm, MarleyBlock & Vluddie Live",     date:"Mar 1, 2023",   filter:"bts",         type:"Behind the Scenes", desc:"Live performance video shot by e.mattt." },
+      { id:"SooL20Sx7co", title:"Federation Takes Over Brooklyn",        date:"Mar 1, 2023",   filter:"bts",         type:"Behind the Scenes", desc:"Watch the Federation Take Over Brooklyn New York." },
+      { id:"jM8kUhjGHis", title:"termes — wait",                         date:"Feb 10, 2023",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for wait by termes." },
+      { id:"SE2lN42OvXU", title:"haglo3 — zero",                         date:"Jan 31, 2023",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for zero by haglo3." },
+      { id:"b_CBYcg_UwI", title:"oupium — change",                       date:"Jan 27, 2023",  filter:"music-video", type:"Music Video",       desc:"Official Video for change by oupium." },
+      { id:"WItJ9GCQgcg", title:"DeanFrost — KoolAid & Young Sinatra",   date:"Jan 27, 2023",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for KoolAid and Young Sinatra by DeanFrost." },
+      { id:"53hpff87sw0", title:"vluddie — [adult swim]",                date:"Dec 18, 2022",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for adult swim by vluddie." },
+      { id:"W5H8DD8Jts0", title:"pyro!!! — advance",                     date:"Nov 16, 2022",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for advance by pyro!!!" },
+      { id:"UyqF_p210dA", title:"Opioid Baby — outside",                 date:"Nov 1, 2022",   filter:"music-video", type:"Music Video",       desc:"Shot & edited by e.mattt." },
+      { id:"wj5qLCwUE9E", title:"Neilxloner — Red Luv / Invader Zim",   date:"Oct 28, 2022",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for Red Luv and Invader Zim by Neilxloner." },
+      { id:"-sbmN4IsNBE", title:"Gita Global Vlog",                      date:"Oct 27, 2022",  filter:"bts",         type:"Behind the Scenes", desc:"Full vlog with Vluddie and Chico at Gita Global." },
+      { id:"VBn_1EzMLzE", title:"Dean Frost — TBTF",                     date:"Sep 30, 2022",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for TBTF by Dean Frost." },
+      { id:"x9OEOcPJYXo", title:"Chico $antana — Where's the Bag",      date:"Sep 18, 2022",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for WHERES THE BAG by Chico $antana." },
+      { id:"4KJTfXEV4yE", title:"obvi! — whattosay",                     date:"Aug 21, 2022",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for whattosay by obvi." },
+      { id:"E-h-I8e0P3s", title:"bryxen — Dear Diary (Directors Cut)",   date:"Aug 10, 2022",  filter:"narrative",   type:"Narrative",         desc:"Official Directors Cut for Dear Diary by bryxen." },
+      { id:"YbWMX2axnbM", title:"bryxen — Dear Diary",                   date:"Aug 5, 2022",   filter:"music-video", type:"Music Video",       desc:"The Official Music Video for Dear Diary by bryxen." },
+      { id:"C9dOelD0QQw", title:"Opioid Baby — Bet",                     date:"Jul 30, 2022",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for Bet by Opioid Baby." },
+      { id:"4-xWpAZYnwk", title:"OFiCiAILLkEVv — New Me",               date:"Jun 17, 2022",  filter:"music-video", type:"Music Video",       desc:"Official Music Video for New Me." },
+      { id:"Ym4NIY1ZgNg", title:"Opioid Baby — Wockhart",                date:"Jun 10, 2022",  filter:"music-video", type:"Music Video",       desc:"Directed by e.mattt." },
+      { id:"-OCMOqkyy-8", title:"jxpiter! — The First Page of the Book of Eli", date:"May 5, 2022", filter:"experimental", type:"Experimental", desc:"Shot & Edited by @e.mattt." },
+      { id:"Vw3AS4mC1kU", title:"HoneyNutChiero — Sorry",                date:"Apr 25, 2022",  filter:"music-video", type:"Music Video",       desc:"Directed & Edited by @e.mattt." },
+      { id:"lGxujGMv-gE", title:"Team Limitless — CT Opener Meet",       date:"Apr 11, 2022",  filter:"bts",         type:"Behind the Scenes", desc:"Shot & Edited by @e.mattt." },
+      { id:"iaQ0gECg7NU", title:"jxpiter! — You Never Learn",            date:"Feb 17, 2022",  filter:"experimental",type:"Experimental",      desc:"An immature film shot entirely on a frozen lake." },
+      { id:"B25O8Hdy1eg", title:"OFiCiAILLkEVv — 2 Take",               date:"Jan 28, 2022",  filter:"music-video", type:"Music Video",       desc:"2 Take music video. Directed & Edited by immature." },
+      { id:"e-8j8GHgzZY", title:"jxpiter! ft. Obvi — paraadise",        date:"Oct 22, 2021",  filter:"music-video", type:"Music Video",       desc:"Immature Visions Presents Official Video." },
+    ];
+
+    // ─── HEADER SCROLL ────────────────────────────────────────────
+    const headerEl = document.querySelector('header');
+    let headerRaf = null;
+
+    function updateHeader() {
+      const scroll = window.scrollY;
+      const start = 0;
+      const end = 120;
+      const progress = Math.min(Math.max((scroll - start) / (end - start), 0), 1);
+
+      const bgAlpha = progress * 0.6;
+      const blur = progress * 20;
+      const saturate = 100 + progress * 60;
+
+      headerEl.style.background = `rgba(0,0,0,${bgAlpha.toFixed(3)})`;
+      headerEl.style.backdropFilter = `blur(${blur.toFixed(1)}px) saturate(${saturate.toFixed(0)}%)`;
+      headerEl.style.webkitBackdropFilter = `blur(${blur.toFixed(1)}px) saturate(${saturate.toFixed(0)}%)`;
+      headerRaf = null;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!headerRaf) headerRaf = requestAnimationFrame(updateHeader);
+    }, { passive: true });
+
+    // ─── TICKER ───────────────────────────────────────────────────
+    const tickerRed   = ["MUSIC VIDEOS", "SHORT FILMS", "BEHIND THE SCENES", "EXPERIMENTAL", "NARRATIVE"];
+    const tickerWhite = ["Vluddie", "Jace Skies", "DarkNight", "Sxint", "YungTenk", "T.B", "brndo", "jxpiter", "Opioid Baby", "obvi", "bryxen"];
+
+    // interleave: one content type, one artist, repeat
+    const interleaved = [];
+    const maxLen = Math.max(tickerRed.length, tickerWhite.length);
+    for (let i = 0; i < maxLen; i++) {
+      if (tickerRed[i % tickerRed.length])   interleaved.push({ text: tickerRed[i % tickerRed.length],   cls: 'red' });
+      if (tickerWhite[i % tickerWhite.length]) interleaved.push({ text: tickerWhite[i % tickerWhite.length], cls: 'white' });
+    }
+
+    const track = document.getElementById('ticker');
+    const doubled = [...interleaved, ...interleaved, ...interleaved];
+    track.innerHTML = doubled.map(({ text, cls }) =>
+      `<span class="ticker-item ${cls}">${text}</span>`
+    ).join('');
+
+    // ─── SCROLL FADE-IN ───────────────────────────────────────────
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 40);
+          fadeObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    // ─── BUILD GRID FROM DATA ─────────────────────────────────────
+    const gridEl = document.getElementById('main-grid');
+    projects.forEach((p, i) => {
+      const item = document.createElement('div');
+      item.className = 'grid-item fade-in';
+      item.dataset.index = i;
+      item.dataset.filter = p.filter;
+      item.tabIndex = 0;
+      item.setAttribute('role', 'button');
+      item.innerHTML = `
+        <img src="https://img.youtube.com/vi/${p.id}/hqdefault.jpg" alt="${p.title}" loading="lazy" data-id="${p.id}" />
+        <span class="grid-item-type">${p.type}</span>
+        <div class="grid-item-overlay">
+          <div class="grid-item-title">${p.title}</div>
+          <div class="grid-item-meta">${p.date}</div>
+        </div>`;
+      item.addEventListener('click', () => openModal(i));
+      item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(i); });
+      gridEl.appendChild(item);
+      fadeObserver.observe(item);
+    });
+
+    // ─── FILTER ───────────────────────────────────────────────────
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        document.querySelectorAll('.grid-item').forEach(item => {
+          const match = f === 'all' || item.dataset.filter === f;
+          item.style.display = match ? '' : 'none';
+        });
+      });
+    });
+
+    // ─── MODAL ────────────────────────────────────────────────────
+    const modal = document.getElementById('modal');
+
+    function openModal(index) {
+      const p = projects[index];
+      document.getElementById('modal-type').textContent = p.type;
+      document.getElementById('modal-title').textContent = p.title;
+
+      // YouTube iframe — autoplay off
+      const media = document.getElementById('modal-media');
+      media.innerHTML = `<iframe
+        src="https://www.youtube-nocookie.com/embed/${p.id}?autoplay=0&rel=0&modestbranding=1"
+        title="${p.title}"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>`;
+
+      // credits
+      const credits = document.getElementById('modal-credits');
+      credits.innerHTML = `
+        <div class="credit-row"><span class="credit-label">Director</span><span class="credit-value">immature</span></div>
+        <div class="credit-row"><span class="credit-label">Released</span><span class="credit-value">${p.date}</span></div>
+        <div class="credit-row"><span class="credit-label">Category</span><span class="credit-value">${p.type}</span></div>`;
+
+      // description
+      document.getElementById('modal-desc').textContent = p.desc;
+
+      // strip — placeholder stills
+      const strip = document.getElementById('modal-strip');
+      const placeholders = [1,2,3,4,5,6,7,8];
+      strip.innerHTML = placeholders.map(n =>
+        `<div class="strip-thumb"><img src="thumbnails/${n}.png" alt="Still ${n}" loading="lazy" /></div>`
+      ).join('');
+
+      modal.classList.add('open');
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => modal.classList.add('visible'));
+      });
+      modal.scrollTop = 0;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('visible');
+      document.getElementById('modal-media').innerHTML = '';
+      setTimeout(() => {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }, 300);
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>
